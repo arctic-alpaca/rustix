@@ -1658,7 +1658,7 @@ pub mod xdp {
     /// XDP umem registration.
     ///
     /// `struct xdp_umem_reg`
-    // https://github.com/torvalds/linux/blob/v6.6/include/uapi/linux/if_xdp.h#L73-L79
+    // https://github.com/torvalds/linux/blob/v6.8/include/uapi/linux/if_xdp.h#L79-L86
     #[repr(C)]
     #[derive(Copy, Clone, Eq, PartialEq, Hash, Debug)]
     pub struct XdpUmemReg {
@@ -1674,6 +1674,10 @@ pub mod xdp {
         ///
         /// Requires kernel version 5.4.
         pub flags: XdpUmemRegFlags,
+        /// AF_XDP TX metadata length
+        ///
+        /// Requires kernel version 6.8.
+        pub tx_metadata_len: u32,
     }
 
     /// XDP statistics.
@@ -1809,11 +1813,8 @@ fn test_sizes() {
     #[cfg(linux_kernel)]
     assert_eq_size!(UCred, libc::ucred);
 
-    // Linux added fields to `xdp_umem_reg` so it's bigger now.
-    /*
     #[cfg(target_os = "linux")]
     assert_eq_size!(super::xdp::XdpUmemReg, c::xdp_umem_reg);
-    */
     #[cfg(target_os = "linux")]
     assert_eq_size!(super::xdp::XdpOptions, c::xdp_options);
     #[cfg(target_os = "linux")]
